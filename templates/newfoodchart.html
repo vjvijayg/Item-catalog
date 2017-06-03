@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+	<div class="row divider green">
+		<div class="col-md-12"></div>
+	</div>
+	<div class="row banner menu">
+		<div class="col-md-11 col-md-offset-1 padding-none">
+			<h1>New Food Item</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-md-offset-1 padding-top">
+			<form action="#" method = "post">
+				<div class="form-group">
+					<label for="name">Name:</label>
+					<input type ="text" maxlength="50" class="form-control" name="name"placeholder="Name of the course">
+
+					<label for="protein">Protein:</label>
+					<textarea class="form-control" maxlength="10" rows="1" name="protein" placeholder="protein of the course"></textarea>
+
+          <label for="carbs">Carbs:</label>
+					<textarea class="form-control" maxlength="10" rows="1" name="carbs" placeholder="carbs of the course"></textarea>
+
+          <label for="fats">Fats:</label>
+					<textarea class="form-control" maxlength="10" rows="1" name="fats" placeholder="fats of the course"></textarea>
+
+          <label for="calories">Calories:</label>
+					<textarea class="form-control" maxlength="10" rows="1" name="calories" placeholder="calories of the course"></textarea>
+
+          <label for="amount">Amount:</label>
+					<textarea class="form-control" maxlength="10" rows="1" name="amount" placeholder="amount of the course"></textarea>
+
+					<label for="ftype">Food type:</label>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="ftype" id="ftype1" value="Fruits">Fruits
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="ftype" id="ftype2" value="Root Vegetables">Root Vegetables
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="ftype" id="ftype3" value="Vegetables">Vegetables
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="ftype" id="ftype4" value="Leaf Vegetables">Leaf Vegetables
+					  </label>
+					</div>
+          <div class="radio">
+					  <label>
+					    <input type="radio" name="ftype" id="ftype4" value="Lentils">Lentils
+					  </label>
+					</div>
+          <div class="radio">
+					  <label>
+					    <input type="radio" name="ftype" id="ftype4" value="Meat">Meat
+					  </label>
+					</div>
+					<button type="submit" class="btn btn-default" id="submit" type="submit">
+					<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Create</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
