@@ -20,7 +20,7 @@ APPLICATION_NAME = "Nutrition"
 
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///nutritioncontentwithusers.db')
+engine = create_engine('sqlite:///nutrition.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -108,8 +108,6 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    # ADD PROVIDER TO LOGIN SESSION
-    login_session['provider'] = 'google'
 
     # see if user exists, if it doesn't make a new one
     user_id = getUserID(data["email"])
@@ -121,7 +119,7 @@ def gconnect():
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += '<img class="login-pic" src="'
+    output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
@@ -152,14 +150,12 @@ def getUserID(email):
     except:
         return None
 
+
 # DISCONNECT - Revoke a current user's token and reset their login_session
-
-
 @app.route('/gdisconnect')
 def gdisconnect():
-    # Only disconnect a connected user.
+        # Only disconnect a connected user.
     credentials = login_session.get('credentials')
-    print "Credentials: ", credentials
     if credentials is None:
         response = make_response(
             json.dumps('Current user not connected.'), 401)
@@ -169,10 +165,22 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    if result['status'] != '200':
+
+    if result['status'] == '200':
+        # Reset the user's sesson.
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
         # For whatever reason, the given token was invalid.
         response = make_response(
-            json.dumps('Failed to revoke token for given user.'), 400)
+            json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -226,6 +234,8 @@ def newFood():
 
 
 # Edit a food
+
+
 @app.route('/food/<int:food_id>/edit/', methods=['GET', 'POST'])
 def editFood(food_id):
     editedFood = session.query(
@@ -342,25 +352,6 @@ def deleteFoodChart(food_id, foodchart_id):
     else:
         return render_template('deleteFoodChart.html', item=itemToDelete)
 
-
-# Disconnect based on provider
-@app.route('/disconnect')
-def disconnect():
-    if 'provider' in login_session:
-        if login_session['provider'] == 'google':
-            gdisconnect()
-            del login_session['gplus_id']
-            del login_session['credentials']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
-        del login_session['user_id']
-        del login_session['provider']
-        flash("You have successfully been logged out.")
-        return redirect(url_for('showFoods'))
-    else:
-        flash("You were not logged in")
-        return redirect(url_for('showFoods'))
 
 
 if __name__ == '__main__':
