@@ -45,103 +45,97 @@
 						{% if i.ftype == 'Fruits' %}
 							<div class="foodchart-item">
 								<h3>{{i.name}}</h3>
-                <p>Carbs- {{i.carbs}}</p>
-                <p>Fats- {{i.fats}}</p>
-                <p>Calories- {{i.calories}}</p>
-                <p>Amount- {{i.amount}}</p>
-								<p class="foodchart-protein">Protein- {{i.protein}}</p>
+								<p>{{i.protein}}</p>
+                <p>{{i.carbs}}</p>
+                <p>{{i.fats}}</p>
+                <p>{{i.calories}}</p>
+                <p>{{i.amount}}</p>
+								<p class="foodchart-protein">{{i.protein}}</p>
 
 							</div>
 						{% endif %}
 					{% endfor %}
 			</div>
-			<div class="col-md-1"></div>
-      <div class="col-md-3">
+      <div class="col-md-4">
 				<h2>Lentils</h2>
 					{% for i in items %}
-						{% if i.ftype == 'Lentils' %}
+						{% if i.course == 'Lentils' %}
 						<div class="foodchart-item">
-							<h3>{{i.name}}</h3>
-							<p>Carbs- {{i.carbs}}</p>
-							<p>Fats- {{i.fats}}</p>
-							<p>Calories- {{i.calories}}</p>
-							<p>Amount- {{i.amount}}</p>
-							<p class="foodchart-protein">Protein- {{i.protein}}</p>
+              <h3>{{i.name}}</h3>
+              <p>{{i.protein}}</p>
+              <p>{{i.carbs}}</p>
+              <p>{{i.fats}}</p>
+              <p>{{i.calories}}</p>
+              <p>{{i.amount}}</p>
+							<p class="foodchart-protein">{{i.protein}}</p>
 
 						</div>
 						{% endif %}
 					{% endfor %}
 			</div>
-			<div class="col-md-1"></div>
-      <div class="col-md-3">
+      <div class="col-md-4">
 				<h2>Meat</h2>
 					{% for i in items %}
-						{% if i.ftype == 'Meat' %}
+						{% if i.course == 'Meat' %}
 						<div class="foodchart-item">
-							<h3>{{i.name}}</h3>
-							<p>Carbs- {{i.carbs}}</p>
-							<p>Fats- {{i.fats}}</p>
-							<p>Calories- {{i.calories}}</p>
-							<p>Amount- {{i.amount}}</p>
-							<p class="foodchart-protein">Protein- {{i.protein}}</p>
+              <h3>{{i.name}}</h3>
+              <p>{{i.protein}}</p>
+              <p>{{i.carbs}}</p>
+              <p>{{i.fats}}</p>
+              <p>{{i.calories}}</p>
+              <p>{{i.amount}}</p>
+							<p class="foodchart-protein">{{i.protein}}</p>
 
 						</div>
 						{% endif %}
 					{% endfor %}
 			</div>
-		</duv>
-		<div class="row">
-			<div class="col-md-1"></div>
-			<div class="col-md-3">
+      <div class="col-md-3">
 				<h2>Vegetables</h2>
 					{% for i in items %}
-						{% if i.ftype == 'Vegetables' %}
+						{% if i.course == 'Vegetables' %}
             <div class="foodchart-item">
-							<h3>{{i.name}}</h3>
-							<p>Carbs- {{i.carbs}}</p>
-							<p>Fats- {{i.fats}}</p>
-							<p>Calories- {{i.calories}}</p>
-							<p>Amount- {{i.amount}}</p>
-							<p class="foodchart-protein">Protein- {{i.protein}}</p>
+              <h3>{{i.name}}</h3>
+              <p>{{i.protein}}</p>
+              <p>{{i.carbs}}</p>
+              <p>{{i.fats}}</p>
+              <p>{{i.calories}}</p>
+              <p>{{i.amount}}</p>
+							<p class="foodchart-protein">{{i.protein}}</p>
 
 						</div>
 						{% endif %}
 					{% endfor %}
-				</div>
-				<div class="col-md-1"></div>
-				<div class="col-md-3">
-					<h2>Root Vegetables</h2>
-						{% for i in items %}
-							{% if i.ftype == 'Root Vegetables' %}
-            	<div class="foodchart-item">
-								<h3>{{i.name}}</h3>
-								<p>Carbs- {{i.carbs}}</p>
-								<p>Fats- {{i.fats}}</p>
-								<p>Calories- {{i.calories}}</p>
-								<p>Amount- {{i.amount}}</p>
-								<p class="foodchart-protein">Protein- {{i.protein}}</p>
+				<h2>Root Vegetables</h2>
+					{% for i in items %}
+						{% if i.course == 'Root Vegetables' %}
+            <div class="foodchart-item">
+              <h3>{{i.name}}</h3>
+              <p>{{i.protein}}</p>
+              <p>{{i.carbs}}</p>
+              <p>{{i.fats}}</p>
+              <p>{{i.calories}}</p>
+              <p>{{i.amount}}</p>
+							<p class="foodchart-protein">{{i.protein}}</p>
 
-							</div>
+						</div>
 						{% endif %}
 					{% endfor %}
-				</div>
-				<div class="col-md-1"></div>
-				<div class="col-md-3">
           <h2>Leaf Vegetables</h2>
   					{% for i in items %}
-  						{% if i.ftype == 'Leaf Vegetables' %}
+  						{% if i.course == 'Leaf Vegetables' %}
               <div class="foodchart-item">
-								<h3>{{i.name}}</h3>
-								<p>Carbs- {{i.carbs}}</p>
-								<p>Fats- {{i.fats}}</p>
-								<p>Calories- {{i.calories}}</p>
-								<p>Amount- {{i.amount}}</p>
-								<p class="foodchart-protein">Protein- {{i.protein}}</p>
+                <h3>{{i.name}}</h3>
+                <p>{{i.protein}}</p>
+                <p>{{i.carbs}}</p>
+                <p>{{i.fats}}</p>
+                <p>{{i.calories}}</p>
+                <p>{{i.amount}}</p>
+  							<p class="foodchart-protein">{{i.protein}}</p>
 
   						</div>
   						{% endif %}
   					{% endfor %}
-					</div>
 			</div>
 			<div class="col-md-1"></div>
 		</div>

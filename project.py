@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, redirect, jsonify
+from flask import url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Food, FoodChart, User
@@ -20,7 +21,7 @@ APPLICATION_NAME = "Nutrition"
 
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///nutrition.db')
+engine = create_engine('sqlite:///nutritioncontentwithusers.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -89,8 +90,8 @@ def gconnect():
     stored_credentials = login_session.get('credentials')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_credentials is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+        json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -108,6 +109,8 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    # ADD PROVIDER TO LOGIN SESSION
+    login_session['provider'] = 'google'
 
     # see if user exists, if it doesn't make a new one
     user_id = getUserID(data["email"])
@@ -119,7 +122,7 @@ def gconnect():
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += '<img src="'
+    output += '<img class="login-pic" src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
@@ -150,12 +153,14 @@ def getUserID(email):
     except:
         return None
 
-
 # DISCONNECT - Revoke a current user's token and reset their login_session
+
+
 @app.route('/gdisconnect')
 def gdisconnect():
-        # Only disconnect a connected user.
+    # Only disconnect a connected user.
     credentials = login_session.get('credentials')
+    print "Credentials: ", credentials
     if credentials is None:
         response = make_response(
             json.dumps('Current user not connected.'), 401)
@@ -165,22 +170,10 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-
-    if result['status'] == '200':
-        # Reset the user's sesson.
-        del login_session['credentials']
-        del login_session['gplus_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
-
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    else:
+    if result['status'] != '200':
         # For whatever reason, the given token was invalid.
         response = make_response(
-            json.dumps('Failed to revoke token for given user.', 400))
+            json.dumps('Failed to revoke token for given user.'), 400)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -234,8 +227,6 @@ def newFood():
 
 
 # Edit a food
-
-
 @app.route('/food/<int:food_id>/edit/', methods=['GET', 'POST'])
 def editFood(food_id):
     editedFood = session.query(
@@ -279,10 +270,12 @@ def showFoodChart(food_id):
     creator = getUserInfo(food.user_id)
     items = session.query(FoodChart).filter_by(
         food_id=food_id).all()
-    if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publicfoodchart.html', items=items, food=food, creator=creator)
+    if 'username' not in login_session or creator.id!=login_session['user_id']:
+        return render_template(
+        'publicfoodchart.html', items=items, food=food, creator=creator)
     else:
-        return render_template('foodchart.html', items=items, food=food, creator=creator)
+        return render_template(
+        'foodchart.html', items=items, food=food, creator=creator)
 
 
 # Create a new Food Chart
@@ -294,9 +287,11 @@ def newFoodChart(food_id):
     if login_session['user_id'] != food.user_id:
         return "<script>function myFunction() {alert('You are not authorized to add food items to food chart. Please add your own food in order to add items.');}</script><body onload='myFunction()''>"
         if request.method == 'POST':
-            newItem = FoodChart(name=request.form['name'], protein=request.form['protein'], carbs=request.form[
-                               'carbs'], fats=request.form['fats'], calories=request.form['calories'],
-                               amount=request.form['amount'], food_id=food_id, user_id=food.user_id)
+            newItem = FoodChart(
+            name=request.form['name'], protein=request.form['protein'],
+            carbs=request.form['carbs'], fats=request.form['fats'],
+            calories=request.form['calories'], amount=request.form['amount'],
+            food_id=food_id, user_id=food.user_id)
             session.add(newItem)
             session.commit()
             flash('New Food %s Item Successfully Created' % (newItem.name))
@@ -306,7 +301,8 @@ def newFoodChart(food_id):
 
 
 # Edit a Food Chart
-@app.route('/food/<int:food_id>/foodchart/<int:foodchart_id>/edit', methods=['GET', 'POST'])
+@app.route('/food/<int:food_id>/foodchart/<int:foodchart_id>/edit',
+            methods=['GET', 'POST'])
 def editFoodChart(food_id, foodchart_id):
     if 'username' not in login_session:
         return redirect('/login')
@@ -332,11 +328,14 @@ def editFoodChart(food_id, foodchart_id):
         flash('Food Item Successfully Edited')
         return redirect(url_for('showFoodChart', food_id=food_id))
     else:
-        return render_template('editfoodchart.html', food_id=restaurant_id, foodchart_id=menu_id, item=editedItem)
+        return render_template(
+        'editfoodchart.html', food_id=restaurant_id, foodchart_id=menu_id,
+        item=editedItem)
 
 
 # Delete a Food Item
-@app.route('/food/<int:food_id>/menu/<int:foodchart_id>/delete', methods=['GET', 'POST'])
+@app.route('/food/<int:food_id>/menu/<int:foodchart_id>/delete',
+            methods=['GET', 'POST'])
 def deleteFoodChart(food_id, foodchart_id):
     if 'username' not in login_session:
         return redirect('/login')
@@ -352,6 +351,25 @@ def deleteFoodChart(food_id, foodchart_id):
     else:
         return render_template('deleteFoodChart.html', item=itemToDelete)
 
+
+# Disconnect based on provider
+@app.route('/disconnect')
+def disconnect():
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['credentials']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash("You have successfully been logged out.")
+        return redirect(url_for('showFoods'))
+    else:
+        flash("You were not logged in")
+        return redirect(url_for('showFoods'))
 
 
 if __name__ == '__main__':

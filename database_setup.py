@@ -64,7 +64,7 @@ class FoodChart(Base):
         }
 
 
-engine = create_engine('sqlite:///nutrition.db')
+engine = create_engine('sqlite:///nutritioncontentwithusers.db')
 
 
 Base.metadata.create_all(engine)
